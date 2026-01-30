@@ -749,7 +749,7 @@ footer {
     font-size: 1.5rem;
 }
 
-/* Modal */
+/* Modales */
 .modal {
     display: none;
     position: fixed;
@@ -760,6 +760,7 @@ footer {
     background-color: rgba(0, 0, 0, 0.7);
     z-index: 2000;
     overflow-y: auto;
+    padding: 20px;
 }
 
 .modal-content {
@@ -768,8 +769,10 @@ footer {
     padding: 30px;
     border-radius: var(--border-radius);
     width: 90%;
-    max-width: 700px;
+    max-width: 800px;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .close-modal {
@@ -780,6 +783,7 @@ footer {
     color: var(--medium-gray);
     cursor: pointer;
     transition: color 0.3s ease;
+    z-index: 10;
 }
 
 .close-modal:hover {
@@ -792,13 +796,26 @@ footer {
     margin-top: 30px;
 }
 
-/* Section d'accueil des formulaires */
-.form-section {
-    display: none; /* Caché par défaut */
+/* Style spécifique pour les modales de formulaire */
+.form-modal .modal-content {
+    max-width: 900px;
+    padding: 40px;
 }
 
-.form-section.active {
-    display: block; /* Affiché lorsqu'actif */
+.form-modal .modal-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-modal .modal-title {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.form-modal .modal-subtitle {
+    color: var(--medium-gray);
+    font-size: 1rem;
 }
 
 /* Responsive */
@@ -868,6 +885,15 @@ footer {
     .modal-actions {
         flex-direction: column;
     }
+    
+    .form-modal .modal-content {
+        padding: 25px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+        margin: 10% auto;
+    }
 }
 
 @media (max-width: 576px) {
@@ -894,8 +920,13 @@ footer {
     }
     
     .modal-content {
+        padding: 15px;
+        margin: 5% auto;
+        width: 95%;
+    }
+    
+    .form-modal .modal-content {
         padding: 20px;
-        margin: 10% auto;
     }
 }  
    </style> 
@@ -917,8 +948,8 @@ footer {
                 <ul>
                     <li><a href="#accueil">Accueil</a></li>
                     <li><a href="#trajets">Trajets & Tarifs</a></li>
-                    <li><a href="#" class="form-link" data-form="reservation">Réservation</a></li>
-                    <li><a href="#" class="form-link" data-form="achat">Achat de billet</a></li>
+                    <li><a href="#" class="open-modal-btn" data-modal="reservation-modal">Réservation</a></li>
+                    <li><a href="#" class="open-modal-btn" data-modal="achat-modal">Achat de billet</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
             </nav>
@@ -937,8 +968,8 @@ footer {
                     <h2>Voyagez confortablement avec <span class="highlight">Royal Transport</span></h2>
                     <p>Des trajets sécurisés et confortables à travers le pays. Réservez ou achetez votre billet en ligne facilement.</p>
                     <div class="hero-buttons">
-                        <a href="#" class="btn btn-primary show-form" data-form="reservation">Réserver un billet</a>
-                        <a href="#" class="btn btn-secondary show-form" data-form="achat">Acheter un billet</a>
+                        <a href="#" class="btn btn-primary open-modal-btn" data-modal="reservation-modal">Réserver un billet</a>
+                        <a href="#" class="btn btn-secondary open-modal-btn" data-modal="achat-modal">Acheter un billet</a>
                     </div>
                 </div>
                 <div class="hero-image">
@@ -961,333 +992,6 @@ footer {
                 
                 <div class="trajets-container">
                     <!-- Les trajets seront générés dynamiquement par JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- Section de réservation (cachée par défaut) -->
-        <section id="reservation-section" class="form-section">
-            <div class="container">
-                <div class="form-header">
-                    <button class="btn btn-secondary back-to-trajets" style="margin-bottom: 20px;">
-                        <i class="fas fa-arrow-left"></i> Retour aux trajets
-                    </button>
-                    <h2 class="section-title">Réservation de Billet</h2>
-                    <p class="section-subtitle">Réservez votre billet maintenant et payez plus tard</p>
-                </div>
-                
-                <div class="reservation-container">
-                    <div class="form-container">
-                        <form id="reservation-form">
-                            <div class="form-group">
-                                <label for="reservation-nom">Nom complet</label>
-                                <input type="text" id="reservation-nom" placeholder="Votre nom complet" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="reservation-phone">Numéro de téléphone</label>
-                                <input type="tel" id="reservation-phone" placeholder="Votre numéro de téléphone" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="reservation-email">Adresse email</label>
-                                <input type="email" id="reservation-email" placeholder="Votre adresse email" required>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="reservation-depart">Ville de départ</label>
-                                    <select id="reservation-depart" required>
-                                        <option value="" disabled selected>Sélectionnez une ville</option>
-                                        <!-- Options seront ajoutées par JS -->
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="reservation-destination">Ville de destination</label>
-                                    <select id="reservation-destination" required>
-                                        <option value="" disabled selected>Sélectionnez une ville</option>
-                                        <!-- Options seront ajoutées par JS -->
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="reservation-date">Date de voyage</label>
-                                    <input type="date" id="reservation-date" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="reservation-passagers">Nombre de passagers</label>
-                                    <select id="reservation-passagers" required>
-                                        <option value="1">1 Passager</option>
-                                        <option value="2">2 Passagers</option>
-                                        <option value="3">3 Passagers</option>
-                                        <option value="4">4 Passagers</option>
-                                        <option value="5">5 Passagers ou plus</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="reservation-message">Message additionnel (optionnel)</label>
-                                <textarea id="reservation-message" placeholder="Informations supplémentaires..."></textarea>
-                            </div>
-                            
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Réserver maintenant</button>
-                                <button type="button" class="btn btn-secondary back-to-trajets">Annuler</button>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <div class="info-container">
-                        <h3>Comment réserver ?</h3>
-                        <ul class="steps-list">
-                            <li>
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h4>Remplissez le formulaire</h4>
-                                    <p>Fournissez vos informations personnelles et les détails de votre voyage.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h4>Confirmation par WhatsApp</h4>
-                                    <p>Nous vous contacterons sur WhatsApp pour confirmer votre réservation.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h4>Paiement à l'embarquement</h4>
-                                    <p>Payez votre billet directement à l'embarquement ou via notre agent.</p>
-                                </div>
-                            </li>
-                        </ul>
-                        
-                        <div class="whatsapp-info">
-                            <i class="fab fa-whatsapp"></i>
-                            <p>Notre service WhatsApp: <strong>+226 77 03 09 41</strong></p>
-                            <p>Disponible 24h/24, 7j/7</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section d'achat de billet (cachée par défaut) -->
-        <section id="achat-section" class="form-section">
-            <div class="container">
-                <div class="form-header">
-                    <button class="btn btn-secondary back-to-trajets" style="margin-bottom: 20px;">
-                        <i class="fas fa-arrow-left"></i> Retour aux trajets
-                    </button>
-                    <h2 class="section-title">Achat de Billet</h2>
-                    <p class="section-subtitle">Achetez votre billet en ligne et recevez-le immédiatement</p>
-                </div>
-                
-                <div class="achat-container">
-                    <div class="form-container">
-                        <form id="achat-form">
-                            <div class="form-group">
-                                <label for="achat-nom">Nom complet</label>
-                                <input type="text" id="achat-nom" placeholder="Votre nom complet" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="achat-phone">Numéro de téléphone</label>
-                                <input type="tel" id="achat-phone" placeholder="Votre numéro de téléphone" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="achat-email">Adresse email</label>
-                                <input type="email" id="achat-email" placeholder="Votre adresse email" required>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="achat-depart">Ville de départ</label>
-                                    <select id="achat-depart" required>
-                                        <option value="" disabled selected>Sélectionnez une ville</option>
-                                        <!-- Options seront ajoutées par JS -->
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="achat-destination">Ville de destination</label>
-                                    <select id="achat-destination" required>
-                                        <option value="" disabled selected>Sélectionnez une ville</option>
-                                        <!-- Options seront ajoutées par JS -->
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="achat-date">Date de voyage</label>
-                                    <input type="date" id="achat-date" required>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label for="achat-passagers">Nombre de passagers</label>
-                                    <select id="achat-passagers" required>
-                                        <option value="1">1 Passager</option>
-                                        <option value="2">2 Passagers</option>
-                                        <option value="3">3 Passagers</option>
-                                        <option value="4">4 Passagers</option>
-                                        <option value="5">5 Passagers ou plus</option>
-                                    </select>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="achat-type">Type de siège</label>
-                                <select id="achat-type" required>
-                                    <option value="standard">Standard - 5 000 FCFA</option>
-                                    <option value="confort">Confort - 7 500 FCFA</option>
-                                    <option value="vip">VIP - 10 000 FCFA</option>
-                                </select>
-                            </div>
-                            
-                            <!-- Section de paiement (affichée après remplissage du formulaire) -->
-                            <div id="paiement-section" class="hidden">
-                                <h3>Méthode de Paiement</h3>
-                                <div class="paiement-options">
-                                    <div class="paiement-option" data-paiement="orange">
-                                        <div class="paiement-logo">
-                                            <i class="fas fa-mobile-alt"></i>
-                                        </div>
-                                        <p>Orange Money</p>
-                                    </div>
-                                    <div class="paiement-option" data-paiement="moov">
-                                        <div class="paiement-logo">
-                                            <i class="fas fa-mobile-alt"></i>
-                                        </div>
-                                        <p>Moov Money</p>
-                                    </div>
-                                    <div class="paiement-option" data-paiement="wave">
-                                        <div class="paiement-logo">
-                                            <i class="fas fa-wallet"></i>
-                                        </div>
-                                        <p>Wave</p>
-                                    </div>
-                                    <div class="paiement-option" data-paiement="mtn">
-                                        <div class="paiement-logo">
-                                            <i class="fas fa-mobile-alt"></i>
-                                        </div>
-                                        <p>MTN Mobile Money</p>
-                                    </div>
-                                </div>
-                                
-                                <div class="paiement-details hidden" id="paiement-details">
-                                    <div class="form-group">
-                                        <label for="paiement-numero">Numéro de téléphone</label>
-                                        <input type="tel" id="paiement-numero" placeholder="Votre numéro pour le paiement">
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="paiement-code">Code de transaction (optionnel)</label>
-                                        <input type="text" id="paiement-code" placeholder="Code de transaction">
-                                    </div>
-                                    
-                                    <div class="paiement-summary">
-                                        <h4>Récapitulatif de paiement</h4>
-                                        <div class="summary-details">
-                                            <div class="summary-item">
-                                                <span>Trajet:</span>
-                                                <span id="summary-trajet">Ouagadougou - Bobo-Dioulasso</span>
-                                            </div>
-                                            <div class="summary-item">
-                                                <span>Passagers:</span>
-                                                <span id="summary-passagers">1</span>
-                                            </div>
-                                            <div class="summary-item">
-                                                <span>Type de siège:</span>
-                                                <span id="summary-type">Standard</span>
-                                            </div>
-                                            <div class="summary-item total">
-                                                <span>Total à payer:</span>
-                                                <span id="summary-total">5 000 FCFA</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-actions">
-                                        <button type="button" id="finaliser-paiement" class="btn btn-primary">Finaliser le paiement</button>
-                                        <button type="button" class="btn btn-secondary back-to-form">Retour au formulaire</button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="form-actions">
-                                <button type="submit" id="achat-submit" class="btn btn-primary">Passer à l'achat</button>
-                                <button type="button" class="btn btn-secondary back-to-trajets">Annuler</button>
-                            </div>
-                        </form>
-                    </div>
-                    
-                    <div class="info-container">
-                        <h3>Bénéfices de l'achat en ligne</h3>
-                        <ul class="benefits-list">
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <div class="benefit-content">
-                                    <h4>Ticket immédiat</h4>
-                                    <p>Recevez votre billet électronique directement sur WhatsApp après paiement.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <div class="benefit-content">
-                                    <h4>Paiement sécurisé</h4>
-                                    <p>Transactions sécurisées via Orange Money, Moov Money, Wave et MTN.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <div class="benefit-content">
-                                    <h4>Assistance 24/7</h4>
-                                    <p>Notre équipe est disponible sur WhatsApp pour toute assistance.</p>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fas fa-check-circle"></i>
-                                <div class="benefit-content">
-                                    <h4>Modification facile</h4>
-                                    <p>Modifiez ou annulez votre billet facilement via WhatsApp.</p>
-                                </div>
-                            </li>
-                        </ul>
-                        
-                        <div class="ticket-preview">
-                            <h4>Votre ticket ressemblera à ceci:</h4>
-                            <div class="ticket-sample">
-                                <div class="ticket-header">
-                                    <h5>Royal Transport</h5>
-                                    <p>E-TICKET</p>
-                                </div>
-                                <div class="ticket-body">
-                                    <div class="ticket-info">
-                                        <p><strong>Trajet:</strong> Ouagadougou → Bobo-Dioulasso</p>
-                                        <p><strong>Date:</strong> 15 Juin 2023</p>
-                                        <p><strong>Heure:</strong> 08:00</p>
-                                        <p><strong>Passager:</strong> Jean Dupont</p>
-                                        <p><strong>Siège:</strong> 12A</p>
-                                        <p><strong>Prix:</strong> 5 000 FCFA</p>
-                                    </div>
-                                    <div class="ticket-qr">
-                                        <div class="qr-placeholder">
-                                            <i class="fas fa-qrcode"></i>
-                                        </div>
-                                        <p>Code: RT-2023-Mois-jr-N</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
@@ -1379,8 +1083,8 @@ footer {
                         <h4>Services</h4>
                         <ul>
                             <li><a href="#trajets">Trajets & Tarifs</a></li>
-                            <li><a href="#" class="form-link" data-form="reservation">Réservation</a></li>
-                            <li><a href="#" class="form-link" data-form="achat">Achat de billet</a></li>
+                            <li><a href="#" class="open-modal-btn" data-modal="reservation-modal">Réservation</a></li>
+                            <li><a href="#" class="open-modal-btn" data-modal="achat-modal">Achat de billet</a></li>
                             <li><a href="#contact">Contact</a></li>
                         </ul>
                     </div>
@@ -1421,6 +1125,329 @@ footer {
         </a>
     </div>
 
+    <!-- Modal pour la réservation -->
+    <div id="reservation-modal" class="modal form-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Réservation de Billet</h2>
+                <p class="modal-subtitle">Réservez votre billet maintenant et payez plus tard</p>
+            </div>
+            
+            <div class="reservation-container">
+                <div class="form-container">
+                    <form id="reservation-form">
+                        <div class="form-group">
+                            <label for="reservation-nom">Nom complet</label>
+                            <input type="text" id="reservation-nom" placeholder="Votre nom complet" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reservation-phone">Numéro de téléphone</label>
+                            <input type="tel" id="reservation-phone" placeholder="Votre numéro de téléphone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reservation-email">Adresse email</label>
+                            <input type="email" id="reservation-email" placeholder="Votre adresse email" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reservation-depart">Ville de départ</label>
+                                <select id="reservation-depart" required>
+                                    <option value="" disabled selected>Sélectionnez une ville</option>
+                                    <!-- Options seront ajoutées par JS -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reservation-destination">Ville de destination</label>
+                                <select id="reservation-destination" required>
+                                    <option value="" disabled selected>Sélectionnez une ville</option>
+                                    <!-- Options seront ajoutées par JS -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reservation-date">Date de voyage</label>
+                                <input type="date" id="reservation-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reservation-passagers">Nombre de passagers</label>
+                                <select id="reservation-passagers" required>
+                                    <option value="1">1 Passager</option>
+                                    <option value="2">2 Passagers</option>
+                                    <option value="3">3 Passagers</option>
+                                    <option value="4">4 Passagers</option>
+                                    <option value="5">5 Passagers ou plus</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="reservation-message">Message additionnel (optionnel)</label>
+                            <textarea id="reservation-message" placeholder="Informations supplémentaires..."></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Réserver maintenant</button>
+                            <button type="button" class="btn btn-secondary close-current-modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="info-container">
+                    <h3>Comment réserver ?</h3>
+                    <ul class="steps-list">
+                        <li>
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Remplissez le formulaire</h4>
+                                <p>Fournissez vos informations personnelles et les détails de votre voyage.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Confirmation par WhatsApp</h4>
+                                <p>Nous vous contacterons sur WhatsApp pour confirmer votre réservation.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Paiement à l'embarquement</h4>
+                                <p>Payez votre billet directement à l'embarquement ou via notre agent.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="whatsapp-info">
+                        <i class="fab fa-whatsapp"></i>
+                        <p>Notre service WhatsApp: <strong>+226 77 03 09 41</strong></p>
+                        <p>Disponible 24h/24, 7j/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour l'achat de billet -->
+    <div id="achat-modal" class="modal form-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 class="modal-title">Achat de Billet</h2>
+                <p class="modal-subtitle">Achetez votre billet en ligne et recevez-le immédiatement</p>
+            </div>
+            
+            <div class="achat-container">
+                <div class="form-container">
+                    <form id="achat-form">
+                        <div class="form-group">
+                            <label for="achat-nom">Nom complet</label>
+                            <input type="text" id="achat-nom" placeholder="Votre nom complet" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="achat-phone">Numéro de téléphone</label>
+                            <input type="tel" id="achat-phone" placeholder="Votre numéro de téléphone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="achat-email">Adresse email</label>
+                            <input type="email" id="achat-email" placeholder="Votre adresse email" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="achat-depart">Ville de départ</label>
+                                <select id="achat-depart" required>
+                                    <option value="" disabled selected>Sélectionnez une ville</option>
+                                    <!-- Options seront ajoutées par JS -->
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="achat-destination">Ville de destination</label>
+                                <select id="achat-destination" required>
+                                    <option value="" disabled selected>Sélectionnez une ville</option>
+                                    <!-- Options seront ajoutées par JS -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="achat-date">Date de voyage</label>
+                                <input type="date" id="achat-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="achat-passagers">Nombre de passagers</label>
+                                <select id="achat-passagers" required>
+                                    <option value="1">1 Passager</option>
+                                    <option value="2">2 Passagers</option>
+                                    <option value="3">3 Passagers</option>
+                                    <option value="4">4 Passagers</option>
+                                    <option value="5">5 Passagers ou plus</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="achat-type">Type de siège</label>
+                            <select id="achat-type" required>
+                                <option value="standard">Standard - 5 000 FCFA</option>
+                                <option value="confort">Confort - 7 500 FCFA</option>
+                                <option value="vip">VIP - 10 000 FCFA</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Section de paiement (affichée après remplissage du formulaire) -->
+                        <div id="paiement-section" class="hidden">
+                            <h3>Méthode de Paiement</h3>
+                            <div class="paiement-options">
+                                <div class="paiement-option" data-paiement="orange">
+                                    <div class="paiement-logo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <p>Orange Money</p>
+                                </div>
+                                <div class="paiement-option" data-paiement="moov">
+                                    <div class="paiement-logo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <p>Moov Money</p>
+                                </div>
+                                <div class="paiement-option" data-paiement="wave">
+                                    <div class="paiement-logo">
+                                        <i class="fas fa-wallet"></i>
+                                    </div>
+                                    <p>Wave</p>
+                                </div>
+                                <div class="paiement-option" data-paiement="mtn">
+                                    <div class="paiement-logo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <p>MTN Mobile Money</p>
+                                </div>
+                            </div>
+                            
+                            <div class="paiement-details hidden" id="paiement-details">
+                                <div class="form-group">
+                                    <label for="paiement-numero">Numéro de téléphone</label>
+                                    <input type="tel" id="paiement-numero" placeholder="Votre numéro pour le paiement">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="paiement-code">Code de transaction (optionnel)</label>
+                                    <input type="text" id="paiement-code" placeholder="Code de transaction">
+                                </div>
+                                
+                                <div class="paiement-summary">
+                                    <h4>Récapitulatif de paiement</h4>
+                                    <div class="summary-details">
+                                        <div class="summary-item">
+                                            <span>Trajet:</span>
+                                            <span id="summary-trajet">Ouagadougou - Bobo-Dioulasso</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span>Passagers:</span>
+                                            <span id="summary-passagers">1</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span>Type de siège:</span>
+                                            <span id="summary-type">Standard</span>
+                                        </div>
+                                        <div class="summary-item total">
+                                            <span>Total à payer:</span>
+                                            <span id="summary-total">5 000 FCFA</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button type="button" id="finaliser-paiement" class="btn btn-primary">Finaliser le paiement</button>
+                                    <button type="button" class="btn btn-secondary back-to-form">Retour au formulaire</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" id="achat-submit" class="btn btn-primary">Passer à l'achat</button>
+                            <button type="button" class="btn btn-secondary close-current-modal">Annuler</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="info-container">
+                    <h3>Bénéfices de l'achat en ligne</h3>
+                    <ul class="benefits-list">
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div class="benefit-content">
+                                <h4>Ticket immédiat</h4>
+                                <p>Recevez votre billet électronique directement sur WhatsApp après paiement.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div class="benefit-content">
+                                <h4>Paiement sécurisé</h4>
+                                <p>Transactions sécurisées via Orange Money, Moov Money, Wave et MTN.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div class="benefit-content">
+                                <h4>Assistance 24/7</h4>
+                                <p>Notre équipe est disponible sur WhatsApp pour toute assistance.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class="fas fa-check-circle"></i>
+                            <div class="benefit-content">
+                                <h4>Modification facile</h4>
+                                <p>Modifiez ou annulez votre billet facilement via WhatsApp.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    
+                    <div class="ticket-preview">
+                        <h4>Votre ticket ressemblera à ceci:</h4>
+                        <div class="ticket-sample">
+                            <div class="ticket-header">
+                                <h5>Royal Transport</h5>
+                                <p>E-TICKET</p>
+                            </div>
+                            <div class="ticket-body">
+                                <div class="ticket-info">
+                                    <p><strong>Trajet:</strong> Ouagadougou → Bobo-Dioulasso</p>
+                                    <p><strong>Date:</strong> 15 Juin 2023</p>
+                                    <p><strong>Heure:</strong> 08:00</p>
+                                    <p><strong>Passager:</strong> Jean Dupont</p>
+                                    <p><strong>Siège:</strong> 12A</p>
+                                    <p><strong>Prix:</strong> 5 000 FCFA</p>
+                                </div>
+                                <div class="ticket-qr">
+                                    <div class="qr-placeholder">
+                                        <i class="fas fa-qrcode"></i>
+                                    </div>
+                                    <p>Code: RT-2023-Mois-jr-N</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal pour afficher le ticket -->
     <div id="ticket-modal" class="modal">
         <div class="modal-content">
@@ -1436,7 +1463,7 @@ footer {
                 <button id="download-ticket" class="btn btn-secondary">
                     <i class="fas fa-download"></i> Télécharger
                 </button>
-                <button class="btn btn-secondary close-ticket-modal">Fermer</button>
+                <button class="btn btn-secondary close-current-modal">Fermer</button>
             </div>
         </div>
     </div>
@@ -1538,7 +1565,7 @@ footer {
         let selectedTrajet = null;
         let selectedPaiement = null;
         let currentTicket = null;
-        let currentForm = null;
+        let currentModal = null;
 
         // Initialisation au chargement de la page
         document.addEventListener('DOMContentLoaded', function() {
@@ -1563,8 +1590,8 @@ footer {
             // Initialiser les modales
             initModals();
             
-            // Initialiser la gestion des formulaires
-            initFormManagement();
+            // Initialiser la gestion des modales
+            initModalManagement();
         });
 
         // Fonction d'initialisation des trajets
@@ -1605,14 +1632,29 @@ footer {
                         <div class="trajet-price">
                             <div class="price">${trajet.prix.toLocaleString()} FCFA</div>
                             <div class="trajet-actions">
-                                <button class="btn btn-primary show-form" data-form="reservation" data-trajet-id="${trajet.id}">Réserver</button>
-                                <button class="btn btn-secondary show-form" data-form="achat" data-trajet-id="${trajet.id}">Acheter</button>
+                                <button class="btn btn-primary open-reservation-modal" data-trajet-id="${trajet.id}">Réserver</button>
+                                <button class="btn btn-secondary open-achat-modal" data-trajet-id="${trajet.id}">Acheter</button>
                             </div>
                         </div>
                     </div>
                 `;
                 
                 trajetsContainer.appendChild(trajetCard);
+            });
+            
+            // Ajouter les écouteurs d'événements aux boutons des cartes
+            document.querySelectorAll('.open-reservation-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const trajetId = this.getAttribute('data-trajet-id');
+                    openModalWithTrajet('reservation-modal', trajetId);
+                });
+            });
+            
+            document.querySelectorAll('.open-achat-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const trajetId = this.getAttribute('data-trajet-id');
+                    openModalWithTrajet('achat-modal', trajetId);
+                });
             });
         }
 
@@ -1773,27 +1815,20 @@ footer {
 
         // Fonction d'initialisation des modales
         function initModals() {
-            const modal = document.getElementById('ticket-modal');
-            const closeModal = document.querySelector('.close-modal');
-            const closeTicketModalBtn = document.querySelector('.close-ticket-modal');
-            
-            if (closeModal) {
-                closeModal.addEventListener('click', function() {
-                    modal.style.display = 'none';
+            // Gestion de la fermeture des modales
+            document.querySelectorAll('.close-modal, .close-current-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    closeCurrentModal();
                 });
-            }
-            
-            if (closeTicketModalBtn) {
-                closeTicketModalBtn.addEventListener('click', function() {
-                    modal.style.display = 'none';
-                });
-            }
+            });
             
             // Fermer la modale en cliquant en dehors
-            window.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
-                }
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeCurrentModal();
+                    }
+                });
             });
             
             // Bouton d'envoi du ticket par WhatsApp
@@ -1809,110 +1844,99 @@ footer {
             }
         }
 
-        // Fonction d'initialisation de la gestion des formulaires
-        function initFormManagement() {
-            // Gestion des boutons pour afficher les formulaires
-            const showFormBtns = document.querySelectorAll('.show-form, .form-link');
+        // Fonction d'initialisation de la gestion des modales
+        function initModalManagement() {
+            // Gestion des boutons pour ouvrir les modales
+            const openModalBtns = document.querySelectorAll('.open-modal-btn');
             
-            showFormBtns.forEach(btn => {
+            openModalBtns.forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const formType = this.getAttribute('data-form');
-                    const trajetId = this.getAttribute('data-trajet-id');
-                    
-                    showForm(formType, trajetId);
+                    const modalId = this.getAttribute('data-modal');
+                    openModal(modalId);
                 });
             });
             
-            // Gestion des boutons pour revenir aux trajets
-            const backToTrajetsBtns = document.querySelectorAll('.back-to-trajets');
-            
-            backToTrajetsBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    hideForms();
-                });
+            // Gérer la touche Échap pour fermer les modales
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeCurrentModal();
+                }
             });
         }
 
-        // Fonction pour afficher un formulaire spécifique
-        function showForm(formType, trajetId = null) {
-            // Cacher toutes les sections de formulaire
-            hideForms();
+        // Fonction pour ouvrir une modale
+        function openModal(modalId) {
+            // Fermer toute modale ouverte
+            closeCurrentModal();
             
-            // Masquer la section des trajets
-            document.getElementById('trajets').classList.add('hidden');
-            
-            // Afficher le formulaire sélectionné
-            const formSection = document.getElementById(`${formType}-section`);
-            if (formSection) {
-                formSection.classList.add('active');
-                currentForm = formType;
+            // Ouvrir la nouvelle modale
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                currentModal = modalId;
+                document.body.style.overflow = 'hidden'; // Empêcher le défilement de la page
                 
-                // Pré-remplir le formulaire si un trajet est sélectionné
-                if (trajetId) {
-                    const trajet = trajets.find(t => t.id === parseInt(trajetId));
-                    if (trajet) {
-                        if (formType === 'reservation') {
-                            document.getElementById('reservation-depart').value = trajet.depart;
-                            document.getElementById('reservation-destination').value = trajet.destination;
-                        } else if (formType === 'achat') {
-                            document.getElementById('achat-depart').value = trajet.depart;
-                            document.getElementById('achat-destination').value = trajet.destination;
-                        }
-                        selectedTrajet = trajet;
-                    }
+                // Réinitialiser le formulaire dans la modale
+                if (modalId === 'reservation-modal') {
+                    resetReservationForm();
+                } else if (modalId === 'achat-modal') {
+                    resetAchatForm();
                 }
-                
-                // Défiler vers le formulaire
-                formSection.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        // Fonction pour cacher tous les formulaires
-        function hideForms() {
-            // Cacher toutes les sections de formulaire
-            document.querySelectorAll('.form-section').forEach(section => {
-                section.classList.remove('active');
-            });
+        // Fonction pour ouvrir une modale avec un trajet pré-rempli
+        function openModalWithTrajet(modalId, trajetId) {
+            openModal(modalId);
             
-            // Afficher la section des trajets
-            document.getElementById('trajets').classList.remove('hidden');
-            
-            // Réinitialiser les formulaires
-            resetForms();
-            
-            // Défiler vers la section des trajets
-            document.getElementById('trajets').scrollIntoView({ behavior: 'smooth' });
+            // Pré-remplir le formulaire avec le trajet sélectionné
+            if (trajetId) {
+                const trajet = trajets.find(t => t.id === parseInt(trajetId));
+                if (trajet) {
+                    if (modalId === 'reservation-modal') {
+                        document.getElementById('reservation-depart').value = trajet.depart;
+                        document.getElementById('reservation-destination').value = trajet.destination;
+                    } else if (modalId === 'achat-modal') {
+                        document.getElementById('achat-depart').value = trajet.depart;
+                        document.getElementById('achat-destination').value = trajet.destination;
+                    }
+                    selectedTrajet = trajet;
+                }
+            }
         }
 
-        // Fonction pour réinitialiser les formulaires
-        function resetForms() {
-            // Réinitialiser le formulaire de réservation
-            document.getElementById('reservation-form').reset();
+        // Fonction pour fermer la modale actuelle
+        function closeCurrentModal() {
+            if (currentModal) {
+                const modal = document.getElementById(currentModal);
+                if (modal) {
+                    modal.style.display = 'none';
+                }
+            }
             
-            // Réinitialiser le formulaire d'achat
-            document.getElementById('achat-form').reset();
-            document.getElementById('paiement-section').classList.add('hidden');
-            document.getElementById('paiement-details').classList.add('hidden');
-            document.getElementById('achat-submit').classList.remove('hidden');
+            // Fermer aussi la modale de ticket si elle est ouverte
+            const ticketModal = document.getElementById('ticket-modal');
+            if (ticketModal) {
+                ticketModal.style.display = 'none';
+            }
             
-            // Réinitialiser les sélections de paiement
-            document.querySelectorAll('.paiement-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            // Réinitialiser les variables
-            selectedPaiement = null;
-            currentForm = null;
-            
-            // Réinitialiser les dates
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const formattedTomorrow = tomorrow.toISOString().split('T')[0];
-            
-            document.getElementById('reservation-date').value = formattedTomorrow;
-            document.getElementById('achat-date').value = formattedTomorrow;
+            currentModal = null;
+            document.body.style.overflow = 'auto'; // Réactiver le défilement de la page
+        }
+
+        // Fonction pour réinitialiser le formulaire de réservation
+        function resetReservationForm() {
+            const form = document.getElementById('reservation-form');
+            if (form) {
+                form.reset();
+                
+                // Réinitialiser la date
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formattedTomorrow = tomorrow.toISOString().split('T')[0];
+                document.getElementById('reservation-date').value = formattedTomorrow;
+            }
         }
 
         // Fonction de gestion de la réservation
@@ -1969,19 +1993,13 @@ footer {
             window.open(whatsappUrl, '_blank');
             
             // Réinitialiser le formulaire
-            document.getElementById('reservation-form').reset();
-            
-            // Réinitialiser la date
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const formattedTomorrow = tomorrow.toISOString().split('T')[0];
-            document.getElementById('reservation-date').value = formattedTomorrow;
+            resetReservationForm();
             
             // Afficher un message de confirmation
             alert('Votre demande de réservation a été envoyée! Vous allez être redirigé vers WhatsApp pour confirmation.');
             
-            // Revenir aux trajets
-            hideForms();
+            // Fermer la modale
+            closeCurrentModal();
         }
 
         // Fonction de gestion de l'achat (étape 1)
@@ -2056,8 +2074,9 @@ footer {
             const achatSubmitBtn = document.getElementById('achat-submit');
             achatSubmitBtn.classList.add('hidden');
             
-            // Défiler vers la section de paiement
-            paiementSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // Défiler vers le haut de la modale pour voir la section de paiement
+            const modalContent = document.querySelector('#achat-modal .modal-content');
+            modalContent.scrollTop = 0;
         }
 
         // Fonction de finalisation du paiement
@@ -2081,11 +2100,11 @@ footer {
                     // Générer le ticket
                     generateTicket();
                     
-                    // Afficher le ticket dans la modale
-                    showTicketModal();
+                    // Fermer la modale d'achat
+                    closeCurrentModal();
                     
-                    // Réinitialiser le formulaire
-                    resetAchatForm();
+                    // Ouvrir la modale de ticket
+                    openModal('ticket-modal');
                 })
                 .catch(error => {
                     alert(`Erreur lors du paiement: ${error}`);
@@ -2159,42 +2178,39 @@ footer {
             `;
         }
 
-        // Fonction d'affichage de la modale du ticket
-        function showTicketModal() {
-            const modal = document.getElementById('ticket-modal');
-            modal.style.display = 'block';
-        }
-
-        // Fonction de réinitialisation du formulaire d'achat
+        // Fonction pour réinitialiser le formulaire d'achat
         function resetAchatForm() {
             // Réinitialiser le formulaire
-            document.getElementById('achat-form').reset();
-            
-            // Cacher la section de paiement
-            document.getElementById('paiement-section').classList.add('hidden');
-            
-            // Afficher à nouveau le bouton de soumission initial
-            document.getElementById('achat-submit').classList.remove('hidden');
-            
-            // Réinitialiser les sélections de paiement
-            document.querySelectorAll('.paiement-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            
-            document.getElementById('paiement-details').classList.add('hidden');
-            
-            // Réinitialiser les champs de paiement
-            document.getElementById('paiement-numero').value = '';
-            document.getElementById('paiement-code').value = '';
-            
-            // Réinitialiser les variables
-            selectedPaiement = null;
-            
-            // Réinitialiser la date
-            const tomorrow = new Date();
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            const formattedTomorrow = tomorrow.toISOString().split('T')[0];
-            document.getElementById('achat-date').value = formattedTomorrow;
+            const form = document.getElementById('achat-form');
+            if (form) {
+                form.reset();
+                
+                // Cacher la section de paiement
+                document.getElementById('paiement-section').classList.add('hidden');
+                
+                // Afficher à nouveau le bouton de soumission initial
+                document.getElementById('achat-submit').classList.remove('hidden');
+                
+                // Réinitialiser les sélections de paiement
+                document.querySelectorAll('.paiement-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                document.getElementById('paiement-details').classList.add('hidden');
+                
+                // Réinitialiser les champs de paiement
+                document.getElementById('paiement-numero').value = '';
+                document.getElementById('paiement-code').value = '';
+                
+                // Réinitialiser les variables
+                selectedPaiement = null;
+                
+                // Réinitialiser la date
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const formattedTomorrow = tomorrow.toISOString().split('T')[0];
+                document.getElementById('achat-date').value = formattedTomorrow;
+            }
         }
 
         // Fonction d'envoi du ticket par WhatsApp
@@ -2233,28 +2249,28 @@ footer {
             const formattedDate = new Date(currentTicket.date).toLocaleDateString('fr-FR');
             
             const ticketContent = `
-        ROYAL TRANSPORT - E-TICKET
-        ============================
+ROYAL TRANSPORT - E-TICKET
+============================
 
-        Référence: ${currentTicket.reference}
-        Passager: ${currentTicket.nom}
-        Téléphone: ${currentTicket.phone}
-        Email: ${currentTicket.email}
+Référence: ${currentTicket.reference}
+Passager: ${currentTicket.nom}
+Téléphone: ${currentTicket.phone}
+Email: ${currentTicket.email}
 
-        Trajet: ${currentTicket.depart} → ${currentTicket.destination}
-        Date: ${formattedDate}
-        Heure de départ: 08:00
-        Passagers: ${currentTicket.passagers}
-        Type: ${currentTicket.type.toUpperCase()}
+Trajet: ${currentTicket.depart} → ${currentTicket.destination}
+Date: ${formattedDate}
+Heure de départ: 08:00
+Passagers: ${currentTicket.passagers}
+Type: ${currentTicket.type.toUpperCase()}
 
-        Prix total: ${currentTicket.total.toLocaleString()} FCFA
-        Mode de paiement: ${selectedPaiement.toUpperCase()}
-        Statut: Payé
+Prix total: ${currentTicket.total.toLocaleString()} FCFA
+Mode de paiement: ${selectedPaiement.toUpperCase()}
+Statut: Payé
 
-        ============================
-        Présentez ce billet à l'embarquement.
-        Bon voyage avec Royal Transport!
-        `;
+============================
+Présentez ce billet à l'embarquement.
+Bon voyage avec Royal Transport!
+`;
             
             // Créer un blob et un lien de téléchargement
             const blob = new Blob([ticketContent], { type: 'text/plain' });
@@ -2300,6 +2316,7 @@ footer {
                 
                 // Ne pas empêcher le comportement par défaut pour les liens vers des sections visibles
                 if (href === '#trajets' || href === '#contact' || href === '#accueil') {
+                    e.preventDefault();
                     // Ces sections sont toujours visibles
                     const targetElement = document.querySelector(href);
                     if (targetElement) {
@@ -2307,8 +2324,6 @@ footer {
                             behavior: 'smooth'
                         });
                     }
-                } else if (href !== '#') {
-                    e.preventDefault();
                 }
             });
         });
